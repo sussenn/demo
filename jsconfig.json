@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        // 配置路径别名. @指向src目录
+        "paths": {
+            "@/*": ["src/*"]
+        }
+    } 
+}
