@@ -1,5 +1,22 @@
 <template>
     <el-card shadow="never" class="border-0">
+        <!-- 搜索 -->
+        <el-form :model="searchForm" label-width="80px" class="mb-3" size="small">
+            <el-row :gutter="20">
+                <el-col :span="8" :offset="0">
+                    <el-form-item label="关键词">
+                        <el-input v-model="searchForm.keyword" placeholder="标题名称" clearable />
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8" :offset="0">
+                    <div class="flex items-center justify-end">
+                        <el-button type="primary" @click="getData">搜索</el-button>
+                        <el-button @click="resetSearchForm">重置</el-button>
+                    </div>
+                </el-col>
+            </el-row>
+        </el-form>
+
         <!-- 新增/刷新 -->
         <div class="flex items-center justify-between mb-4">
             <el-button type="primary" size="small" @click="handleAdd">
@@ -17,10 +34,10 @@
         <el-table :data="tableData" stripe style="width: 100%" v-loading="loading">
             <el-table-column prop="title" label="公告标题" />
             <el-table-column prop="createTime" label="创建时间" width="380" />
+
             <el-table-column label="操作" width="180" align="center">
                 <template #default="scope">
                     <el-button type="primary" size="small" text @click="handleEdit(scope.row)">修改</el-button>
-
                     <!-- 删除提示 -->
                     <el-popconfirm title="是否删除?" confirmButtonText="确认" cancelButtonText="取消"
                         @confirm="handleDel(scope.row.id)">
@@ -61,10 +78,19 @@ import { getNoticeList, addNotice, editNotice, delNotice } from '@/api/notice';
 import FormDrawer from '@/components/FormDrawer.vue';
 import { toast } from '@/composables/util';
 
+// 搜索
+const searchForm = reactive({
+    keyword: ''
+})
+const resetSearchForm = () => {
+    searchForm.keyword = ''
+    getData()
+}
+
+// 分页
 const tableData = ref([])
 const loading = ref(false)
 
-// 分页
 const currentPage = ref(1)
 const total = ref(0)
 const limit = ref(10)
@@ -76,7 +102,8 @@ function getData(page = null) {
     loading.value = true
     getNoticeList(
         currentPage.value,
-        limit.value
+        limit.value,
+        searchForm
     )
         .then(res => {
             console.log(res);

@@ -1,7 +1,7 @@
 import axios from '@/axios.js'
 
-export function getNoticeList(pageNum, pageSize) {
-    return axios.get(`/admin/notice/list/${pageNum}/${pageSize}`)
+export function getNoticeList(pageNum, pageSize, data) {
+    return axios.post(`/admin/notice/list/${pageNum}/${pageSize}`, data)
 }
 
 export function addNotice(data) {
